@@ -10,7 +10,8 @@ Melissa Bruno
 - Problem: a standardized definition for neoadjuvant data collection does not exist in the literature.
 
 #Objective
-We aim to leverage existing Surveillance, Epidemiology and End Results (SEER) data elements to investigate the development of an algorithm using data items collected and transmitted through SEER to calculate a score to characterize the likelihood a patient received neoadjuvant treatment. 
+We aim to leverage existing Surveillance, Epidemiology and End Results (SEER) data elements to investigate the development of an algorithm using data items collected and transmitted through SEER to calculate a score to characterize the likelihood a patient received neoadjuvant treatment.
+![](/Users/mbruno2/Documents/SEER.png)
 
 
 #Methods
