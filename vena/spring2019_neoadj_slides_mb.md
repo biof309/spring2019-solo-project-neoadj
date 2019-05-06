@@ -102,7 +102,7 @@ Histogram for Radiation-Surgery Sequence
     print(neocolon[['Chemotherapy', 'neo_chemotherapy', 'neoTEST_chemotherapy']])
     
 #Next steps
-- Create neoadjuvant category variables for all indicators
+- Create neoadjuvant category variables for all chosen indicators
 - Create descriptive statistics and tables for new categorizations
 - Calculate Se, Sp, PPV, and F-score to evaluate performance against outcome sequence variables
 - Test on other cancer sites (ex: breast)
