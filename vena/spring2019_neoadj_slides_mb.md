@@ -11,7 +11,10 @@ Melissa Bruno
 
 #Objective
 We aim to leverage existing Surveillance, Epidemiology and End Results (SEER) data elements to investigate the development of an algorithm using data items collected and transmitted through SEER to calculate a score to characterize the likelihood a patient received neoadjuvant treatment.
-![](/Users/mbruno2/Documents/SEER.png)
+
+
+   ![](/Users/mbruno2/Documents/SEER.png)
+
 
 
 #Methods
@@ -71,7 +74,39 @@ Histogram for Radiation-Surgery Sequence
     plt.show()
    ![](/Users/mbruno2/Documents/rad_surg_seq.png)
 
-#Creating new variables to use in algorithm (the slow way)
+#Creating new variables to use in algorithm
+
+First looking at the the unique codes for chemotherapy using the following function:
+
+    chemo_list=list(neocolon['Chemotherapy'])
+
+
+    def unique(list1):
+    '''This function prints out the unique codes or values for list1'''
+        # insert the list to the set
+        list_set = set(list1)
+        # convert the set to the list
+        unique_list = (list(list_set))
+        for x in unique_list:
+            print(x)
+    
+    print('The NAACCR codes for Chemotherapy are:')
+    unique(chemo_list)
+    
+    The NAACCR codes for Chemotherapy are:
+        0
+        1
+        2
+        3
+        99
+        82
+        85
+        86
+        87
+        88
+
+
+    #Creating new chemotherapy variable for use in algorithm
     neocolon.loc[neocolon.Chemotherapy == 0,  'neo_chemotherapy'] = 0
     neocolon.loc[neocolon.Chemotherapy == 1,  'neo_chemotherapy'] = 2
     neocolon.loc[neocolon.Chemotherapy == 2,  'neo_chemotherapy'] = 2
@@ -83,7 +118,20 @@ Histogram for Radiation-Surgery Sequence
     neocolon.loc[neocolon.Chemotherapy == 88, 'neo_chemotherapy'] = 2
     neocolon.loc[neocolon.Chemotherapy == 99, 'neo_chemotherapy'] = 9
     print(neocolon[['Chemotherapy','neo_chemotherapy']])
+    
+    x_ticks=[0, 1, 2, 3, 4, 9]
+    x_labs= ['no', 'unl', 'pos', 'lik', 'uni', 'unk']
+    
+    plt.hist(neo_chemotherapy, bins=8)
+    plt.xlabel('Neoadjuvant category')
+    plt.ylabel('Number of observations')
+    plt.xticks(x_ticks,x_labs)
+    plt.title('Distribution of cases for neoadjuvant chemotherapy categories')
+    plt.show()
    ![](/Users/mbruno2/Documents/neo_chemo_dist.png)
+
+    
+    
     
 #Function for creating new variables 
 
@@ -101,6 +149,27 @@ Histogram for Radiation-Surgery Sequence
     neocolon.loc[neocolon.Chemotherapy in uni_neo,  'neoTEST_chemotherapy'] = 4
     neocolon.loc[neocolon.Chemotherapy in unk_neo,  'neoTEST_chemotherapy'] = 9
     print(neocolon[['Chemotherapy', 'neo_chemotherapy', 'neoTEST_chemotherapy']])
+    
+    
+
+#Summing neoadjuvant scores across cases
+
+    #Summing chemotherapy and immunotherapy variables
+    #importing numpy
+    import numpy as np
+    
+    #Selecting neoadjuvant variable columns to sum across & creating a numpy array
+    neoadj_sum=neocolon.loc[:, ['neo_chemotherapy','neo_immunotherapy']]
+    print(neoadj_sum)
+    neoadj_sum_array=np.array(neoadj_sum)
+    
+    #Summing across the rows
+    neo_tot=np.sum(neoadj_sum_array, axis=1)
+    print(neo_tot)
+    
+Looking into how to add array of row sums as a column back in the neoadj_sum dataframe
+
+
     
 #Next steps
 - Create neoadjuvant category variables for all chosen indicators
