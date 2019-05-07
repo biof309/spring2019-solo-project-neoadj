@@ -13,12 +13,13 @@ from pandas.io.parsers import TextFileReader
 
 neocolon: Union[Union[TextFileReader, DataFrame], Any]= pd.read_csv('/Users/mbruno2/Documents/neo_colon.csv')
 
-#Viewing head/tail  of the dataframe
-neocolon.head()
-neocolon.tail()
+#Viewing head/tail/shape  of the dataframe
+print(neocolon.head())
+print(neocolon.tail())
 
 #Pulling description of dataframe
-neocolon.describe()
+print(neocolon.describe())
+neocolon.shape
 
 #Creating list of variable names
 for col in neocolon.columns:
