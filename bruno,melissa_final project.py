@@ -34,7 +34,7 @@ total_rows= neocolon.count()
 neocolon.rename(columns={'Age recode with <1 year olds':'Age'}, inplace=True)
 print(neocolon[neocolon['Age']<18])
 
-print(neocolon['Immunotherapy'])
+
 
 
 
@@ -55,10 +55,14 @@ sys_surg_seq=neocolon['RX Summ--Systemic Surg Seq']
 rad_surg_seq=neocolon['Radiation sequence with surgery']
 
 #Histogram for Systemic-Surgery Sequence
+x_ticks_seq= [0,2,3,4,5,6,7,9]
+
+
 plt.hist(sys_surg_seq, bins=8)
 plt.xlabel('NAACCR code')
 plt.ylabel('Number of observations')
 plt.title('Distribution of cases for Systemic Surgery Sequence')
+plt.xticks(x_ticks_seq)
 plt.show()
 
 #Histogram for Radiation-Surgery Sequence
@@ -66,6 +70,7 @@ plt.hist(rad_surg_seq, bins=8)
 plt.xlabel('NAACCR code')
 plt.ylabel('Number of observations')
 plt.title('Distribution of cases for Radiation Surgery Sequence')
+plt.xticks(x_ticks_seq)
 plt.show()
 
 

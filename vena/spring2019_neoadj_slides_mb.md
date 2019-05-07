@@ -30,6 +30,8 @@ We aim to leverage existing Surveillance, Epidemiology and End Results (SEER) da
 4. Exploratory Data Analysis (EDA)
 5. Creation of new neoadjuvant variables
 
+    ![](/Users/mbruno2/Documents/steps.png)
+
 #Steps 1-3 (import and wrangling)
 import pandas as pd
     pd.read_csv('/Users/mbruno2/Documents/neo_colon.csv')
@@ -141,8 +143,18 @@ Histogram for Systemic-Surgery Sequence
     plt.xlabel('NAACCR code')
     plt.ylabel('Number of observations')
     plt.title('Distribution of cases for Systemic Surgery Sequence')
+    plt.xticks(x_ticks_seq)
     plt.show()
    ![](/Users/mbruno2/Documents/sys_surg_seq.png)
+   
+        0	No systemic therapy and/or surgical procedures; unknown if surgery and/or systemic therapy given
+        2	Systemic therapy before surgery
+        3	Systemic therapy after surgery
+        4	Systemic therapy both before and after surgery
+        5	Intraoperative systemic therapy
+        6	Intraoperative systemic therapy with other therapy administered before and/or after surgery
+        7	Surgery both before and after systemic therapy
+        9	Sequence unknown, but both surgery and systemic therapy given
 
 Histogram for Radiation-Surgery Sequence
 
@@ -150,8 +162,19 @@ Histogram for Radiation-Surgery Sequence
     plt.xlabel('NAACCR code')
     plt.ylabel('Number of observations')
     plt.title('Distribution of cases for Radiation Surgery Sequence')
+    plt.xticks(x_ticks_seq)
     plt.show()
    ![](/Users/mbruno2/Documents/rad_surg_seq.png)
+   
+   
+        0	No radiation and/or no surgery; unknown if surgery and/or radiation given
+        2	Radiation before surgery
+        3	Radiation after surgery
+        4	Radiation both before and after surgery
+        5	Intraoperative radiation
+        6	Intraoperative radiation with other radiation given before and/or after surgery
+        7	Surgery both before and after radiation
+        9	Sequence unknown, but both surgery and radiation were given
 
 #Step 5: Creating new variables to use in algorithm
 
