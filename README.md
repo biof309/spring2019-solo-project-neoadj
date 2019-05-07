@@ -34,14 +34,93 @@ We aim to leverage existing Surveillance, Epidemiology and End Results (SEER) da
 import pandas as pd
     pd.read_csv('/Users/mbruno2/Documents/neo_colon.csv')
 
-    neocolon.head()
-    neocolon.tail()
-    neocolon.describe()
+    print(neocolon.head())
+    print(neocolon.tail())
+    print(neocolon.describe())
+    neocolon.shape()
+    
+       Age recode with <1 year olds  ...  Immunotherapy recode (yes, no/unk)
+    0                            18  ...                                   0
+    1                            17  ...                                   0
+    2                            15  ...                                   0
+    3                            18  ...                                   0
+    4                            18  ...                                   0
+
+
+       Age recode with <1 year olds  ...  Immunotherapy recode (yes, no/unk)
+    count                  25092.000000  ...                        25092.000000
+    mean                      14.221226  ...                            0.050136
+    std                        2.706808  ...                            0.218229
+    min                        3.000000  ...                            0.000000
+    25%                       12.000000  ...                            0.000000
+    50%                       14.000000  ...                            0.000000
+    75%                       16.000000  ...                            0.000000
+    max                       18.000000  ...                            1.000000
+    
+    neocolon.shape
+    (25092, 53)
+
 
 Creating list of variable names:
 
     for col in neocolon.columns:
          print(col)
+
+    Age recode with <1 year olds
+    Sex
+    Year of diagnosis
+    Month of diagnosis
+    SEER registry
+    CS Schema v0204+
+    Diagnostic Confirmation
+    Type of Reporting Source
+    Primary Site
+    Site recode ICD-O-3/WHO 2008
+    Grade
+    Grade Path Value
+    Grade Path System
+    Histologic Type ICD-O-3
+    Behavior code ICD-O-3
+    Behavior code ICD-O-3 (in-house)
+    Histology recode - broad groupings
+    SEER Summary Stage 2000
+    Derived AJCC Stage Group, 6th ed (2004+)
+    Derived AJCC Stage Group, 7th ed (2010+)
+    CS tumor size (2004+)
+    Regional nodes positive (1988+)
+    CS mets at DX-bone (2010+)
+    CS mets at DX-brain (2010+)
+    CS mets at DX-liver (2010+)
+    CS mets at DX-lung (2010+)
+    CS mets at DX-bone (in-house)
+    CS mets at DX-brain (in-house)
+    CS mets at DX-liver (in-house)
+    CS mets at DX-lung (in-house)
+    RX Year of Surgery
+    RX Month of Surgery
+    RX Year of Mst Defn Srg
+    RX Month of Mst Defn Srg
+    RX Year of Radiation
+    RX Month of Radiation
+    RX Year of Chemo
+    RX Month of Chemo
+    RX Summ--Treatment Status (2010+)
+    RX Summ--Surg Prim Site (1998+)
+    RX Summ--Scope Reg LN Sur (2003+)
+    RX Summ--Surg Oth Reg/Dis (2003+)
+    RX Summ--Systemic Surg Seq
+    RX Summ--Transplnt/Endocr
+    Reason no cancer-directed surgery
+    Radiation sequence with surgery
+    Chemotherapy
+    Hormone therapy
+    Immunotherapy
+    Radiation recode
+    Chemotherapy recode (yes, no/unk)
+    Hormone therapy recode (yes, no/unk)
+    Immunotherapy recode (yes, no/unk)
+
+
 
 Renaming 'age' variable and viewing observations <18yo
 
