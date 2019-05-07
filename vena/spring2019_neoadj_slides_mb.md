@@ -74,7 +74,7 @@ Histogram for Radiation-Surgery Sequence
     plt.show()
    ![](/Users/mbruno2/Documents/rad_surg_seq.png)
 
-#Creating new variables to use in algorithm
+#Step 5: Creating new variables to use in algorithm
 
 First looking at the the unique codes for chemotherapy using the following function:
 
@@ -93,7 +93,7 @@ First looking at the the unique codes for chemotherapy using the following funct
     print('The NAACCR codes for Chemotherapy are:')
     unique(chemo_list)
     
-    The NAACCR codes for Chemotherapy are:
+      The NAACCR codes for Chemotherapy are:
         0
         1
         2
@@ -133,7 +133,7 @@ First looking at the the unique codes for chemotherapy using the following funct
     
     
     
-#Function for creating new variables 
+#Function for creating new variables (draft)
 
     no_neo = [0]
     unl_neo= [3, 82]
@@ -152,20 +152,27 @@ First looking at the the unique codes for chemotherapy using the following funct
     
     
 
-#Summing neoadjuvant scores across cases
+#Function to sum neoadjuvant scores across cases
 
     #Summing chemotherapy and immunotherapy variables
     #importing numpy
     import numpy as np
     
-    #Selecting neoadjuvant variable columns to sum across & creating a numpy array
-    neoadj_sum=neocolon.loc[:, ['neo_chemotherapy','neo_immunotherapy']]
-    print(neoadj_sum)
-    neoadj_sum_array=np.array(neoadj_sum)
+    def neo_cat_sum(neo_var1, neo_var2):
+        '''This function changes the columns of neo_var1 & neo_var2 into
+        numpy arrays that can be summed across rows'''
+        
+        #Creating new dataframe with neo_var1 and neo_var2 as columns
+        neoadj_sum = neocolon.loc[:, [neo_var1, neo_var2]]
+        
+        #Changing new dataframe into numpy array
+        neoadj_sum_array = np.array(neoadj_sum)
+        
+        #Summing across the rows of the dataframe and printing the totals as an array
+        neo_tot = np.sum(neoadj_sum_array, axis=1)
+        print(neo_tot)
     
-    #Summing across the rows
-    neo_tot=np.sum(neoadj_sum_array, axis=1)
-    print(neo_tot)
+    neo_cat_sum('neo_chemotherapy','neo_immunotherapy')
     
 Looking into how to add array of row sums as a column back in the neoadj_sum dataframe
 

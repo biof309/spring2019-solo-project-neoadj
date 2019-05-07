@@ -177,12 +177,19 @@ plt.show()
 import numpy as np
 
 def neo_cat_sum(neo_var1, neo_var2):
+    '''This function changes the columns of neo_var1 & neo_var2 into
+    numpy arrays that can be summed across rows'''
+    #Creating new dataframe with neo_var1 and neo_var2 as columns
     neoadj_sum = neocolon.loc[:, [neo_var1, neo_var2]]
+    #Changing new dataframe into numpy array
     neoadj_sum_array = np.array(neoadj_sum)
+    #Summing across the rows of the dataframe and printing the totals as an array
     neo_tot = np.sum(neoadj_sum_array, axis=1)
     print(neo_tot)
 
-neo_cat_sum(neocolon['neo_chemotherapy'],neocolon['neo_immunotherapy'])
+neo_cat_sum('neo_chemotherapy','neo_immunotherapy')
+
+
 
 
 
@@ -208,7 +215,7 @@ print(neo_tot)
 
 
 
-#Testing
+#Test code for a function to create neoadj variables
 
 no_neo = [0]
 unl_neo= [3, 82]
@@ -227,9 +234,3 @@ print(neocolon[['Chemotherapy', 'neo_chemotherapy', 'neoTEST_chemotherapy']])
 
 
 
-
-
-
-
-#Creating function
-def
