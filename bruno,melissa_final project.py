@@ -121,6 +121,8 @@ neocolon.loc[neocolon.Chemotherapy == 99, 'neo_chemotherapy'] = 9
 
 print(neocolon[['Chemotherapy','neo_chemotherapy']])
 neo_chemotherapy=neocolon['neo_chemotherapy']
+neo_chemotherapy.astype(int)
+
 
 
 #Creating histogram of new neo_chemotherapy variable categories
@@ -159,7 +161,7 @@ neocolon.loc[neocolon.Immunotherapy == 99, 'neo_immunotherapy'] = 9
 
 print(neocolon[['Immunotherapy','neo_immunotherapy']])
 neo_immunotherapy=neocolon['neo_immunotherapy']
-
+neo_immunotherapy.astype(int)
 
 #Creating histogram of new neo_immunotherapy variable categories
 x_ticks=[0, 1, 2, 3, 4, 9]
@@ -190,53 +192,101 @@ def neo_cat_sum(neo_var1, neo_var2):
     #Changing new dataframe into numpy array
     neoadj_sum_array = np.array(neoadj_sum)
     #Summing across the rows of the dataframe and printing the totals as an array
-    neo_tot = np.sum(neoadj_sum_array, axis=1)
-    print(neo_tot)
+    total = np.sum(neoadj_sum_array, axis=1)
+    print(total)
+    return total
 
-neo_cat_sum('neo_chemotherapy','neo_immunotherapy')
+#Adding total as column in neocolon dataframe
+neo_tot= neo_cat_sum('neo_chemotherapy','neo_immunotherapy')
+neocolon['neo_tot']=neo_tot
 
-
-
-
-
-
-#Selecting neoadjuvant variable columns to sum across & creating a numpy array
-neoadj_sum=neocolon.loc[:, ['neo_chemotherapy','neo_immunotherapy']]
-print(neoadj_sum)
-neoadj_sum_array=np.array(neoadj_sum)
-
-#Summing across the rows
-neo_tot=np.sum(neoadj_sum_array, axis=1)
-print(neo_tot)
-
-
-
-
-
-
-
-
+neocolon['neo_chemotherapy']=neo_chemotherapy.astype(int)
+neocolon['neo_immunotherapy']=neo_immunotherapy.astype(int)
+print(neocolon[['neo_chemotherapy', 'neo_immunotherapy', 'neo_tot']])
 
 
 
 
 
 #Test code for a function to create neoadj variables
-
+#Lists for translating NAACCR codes into neoadjuvant codes
 no_neo = [0]
 unl_neo= [3, 82]
 pos_neo= [88, 1, 2]
-lik_neo= [84]
+lik_neo= [85]
 uni_neo= [86, 87]
 unk_neo= [99]
 
-neocolon.loc[neocolon.Chemotherapy in no_neo,   'neoTEST_chemotherapy'] = 0
-neocolon.loc[neocolon.Chemotherapy in unl_neo,  'neoTEST_chemotherapy'] = 1
-neocolon.loc[neocolon.Chemotherapy in pos_neo,  'neoTEST_chemotherapy'] = 2
-neocolon.loc[neocolon.Chemotherapy in lik_neo,  'neoTEST_chemotherapy'] = 3
-neocolon.loc[neocolon.Chemotherapy in uni_neo,  'neoTEST_chemotherapy'] = 4
-neocolon.loc[neocolon.Chemotherapy in unk_neo,  'neoTEST_chemotherapy'] = 9
-print(neocolon[['Chemotherapy', 'neo_chemotherapy', 'neoTEST_chemotherapy']])
+
+def translate_to_neo(og_var):
+    '''This function translates the original NAACCR variable coding into the new
+    neoadjuvant variable codings and returns a list with the new codings'''
+    #Creating empty list for new neoadjuvant variable codes
+    new_neo_var=[]
+    #Creating new variable codes from above lists of neoadjuvant codes
+    for code in og_var:
+        if code in no_neo:
+            new_neo_var.append(0)
+        if code in unl_neo:
+            new_neo_var.append(1)
+        if code in pos_neo:
+            new_neo_var.append(2)
+        if code in lik_neo:
+            new_neo_var.append(3)
+        if code in uni_neo:
+            new_neo_var.append(4)
+        if code in unk_neo:
+            new_neo_var.append(9)
+    return new_neo_var
+
+chemotherapy_neo=translate_to_neo(neocolon["Chemotherapy"])
+
+neocolon['chemotherapy_neo']=chemotherapy_neo
+print(neocolon[['neo_chemotherapy', 'chemotherapy_neo']])
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+neo_TEST_chemo=[]
+for code in neocolon["Chemotherapy"]:
+    if code in no_neo:
+        neo_TEST_chemo.append(0)
+    if code in unl_neo:
+        neo_TEST_chemo.append(1)
+    if code in pos_neo:
+        neo_TEST_chemo.append(2)
+    if code in lik_neo:
+        neo_TEST_chemo.append(3)
+    if code in uni_neo:
+        neo_TEST_chemo.append(4)
+    if code in unk_neo:
+        neo_TEST_chemo.append(9)
+
+
+print(neo_TEST_chemo)
+len(neo_TEST_chemo)
+
+neocolon['neo_TEST_chemo']=neo_TEST_chemo
+
+print(neocolon[['neo_chemotherapy', 'neo_TEST_chemo']])
