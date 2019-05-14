@@ -15,6 +15,29 @@ We aim to leverage existing Surveillance, Epidemiology and End Results (SEER) da
 
    ![](/Users/mbruno2/Documents/SEER.png)
 
+#Brief coding background
+National Association of American Central Cancer Registries (NAACCR) coding
+for the SEER Chemotherapy Variable.
+
+    00	None, chemotherapy was not part of the planned first course of therapy.
+    01	Chemotherapy, NOS.
+    02	Chemotherapy, single agent.
+    03	Chemotherapy, multiple agents.
+    82	Chemotherapy was not recommended/administered because it was contraindicated due to patient risk factors (i.e., comorbid conditions, advanced age).
+    85	Chemotherapy was not administered because the patient died prior to planned or recommended therapy.
+    86	Chemotherapy was not administered. It was recommended by the patient's physician, but was not administered as part of first-course therapy. No reason was stated in the patient record.
+    87	Chemotherapy was not administered; it was recommended by the patient's physician, but this treatment was refused by the patient, the patient's family member, or the patient's guardian. The refusal was noted in the patient record.
+    88	Chemotherapy was recommended, but it is unknown if it was administered.
+    99	It is unknown whether a chemotherapeutic agent(s) was recommended or administered because it is not stated in patient record; death certificate-only cases.
+
+Neoadjuvant coding categories for algorithm:
+
+    0   No neoadjuvant therapy would be administered
+    1   Unlikely 
+    2   Possible 
+    3   Likely 
+    4   Unindicative of neoadjuvant therapy
+    9   Unknown
 
 
 #Methods
@@ -29,6 +52,8 @@ We aim to leverage existing Surveillance, Epidemiology and End Results (SEER) da
 3. Data wrangling
 4. Exploratory Data Analysis (EDA)
 5. Creation of new neoadjuvant variables
+
+    ![](/Users/mbruno2/Documents/steps.png)
 
 #Steps 1-3 (import and wrangling)
 import pandas as pd
@@ -126,9 +151,11 @@ Renaming 'age' variable and viewing observations <18yo
 
     neocolon.rename(columns={'Age recode with <1 year olds':'Age'}, inplace=True)
     print(neocolon[neocolon['Age']<18])
+    
+    
+
 
 #Step 4: Exploratory Data Analysis (EDA)
-import matplotlib.pyplot as plt
 
 Creating variables for the two outcomes of interest
 
@@ -141,8 +168,18 @@ Histogram for Systemic-Surgery Sequence
     plt.xlabel('NAACCR code')
     plt.ylabel('Number of observations')
     plt.title('Distribution of cases for Systemic Surgery Sequence')
+    plt.xticks(x_ticks_seq)
     plt.show()
    ![](/Users/mbruno2/Documents/sys_surg_seq.png)
+   
+        0	No systemic therapy and/or surgical procedures; unknown if surgery and/or systemic therapy given
+        2	Systemic therapy before surgery
+        3	Systemic therapy after surgery
+        4	Systemic therapy both before and after surgery
+        5	Intraoperative systemic therapy
+        6	Intraoperative systemic therapy with other therapy administered before and/or after surgery
+        7	Surgery both before and after systemic therapy
+        9	Sequence unknown, but both surgery and systemic therapy given
 
 Histogram for Radiation-Surgery Sequence
 
@@ -150,10 +187,21 @@ Histogram for Radiation-Surgery Sequence
     plt.xlabel('NAACCR code')
     plt.ylabel('Number of observations')
     plt.title('Distribution of cases for Radiation Surgery Sequence')
+    plt.xticks(x_ticks_seq)
     plt.show()
    ![](/Users/mbruno2/Documents/rad_surg_seq.png)
+   
+   
+        0	No radiation and/or no surgery; unknown if surgery and/or radiation given
+        2	Radiation before surgery
+        3	Radiation after surgery
+        4	Radiation both before and after surgery
+        5	Intraoperative radiation
+        6	Intraoperative radiation with other radiation given before and/or after surgery
+        7	Surgery both before and after radiation
+        9	Sequence unknown, but both surgery and radiation were given
 
-#Step 5: Creating new variables to use in algorithm
+#Step 5: Creating new variables to use in algorithm (first attempt)
 
 First looking at the the unique codes for chemotherapy using the following function:
 
@@ -212,25 +260,6 @@ First looking at the the unique codes for chemotherapy using the following funct
     
     
     
-#Function for creating new variables (draft)
-
-    no_neo = [0]
-    unl_neo= [3, 82]
-    pos_neo= [88, 1, 2]
-    lik_neo= [84]
-    uni_neo= [86, 87]
-    unk_neo= [99]
-    
-    neocolon.loc[neocolon.Chemotherapy in no_neo,   'neoTEST_chemotherapy'] = 0
-    neocolon.loc[neocolon.Chemotherapy in unl_neo,  'neoTEST_chemotherapy'] = 1
-    neocolon.loc[neocolon.Chemotherapy in pos_neo,  'neoTEST_chemotherapy'] = 2
-    neocolon.loc[neocolon.Chemotherapy in lik_neo,  'neoTEST_chemotherapy'] = 3
-    neocolon.loc[neocolon.Chemotherapy in uni_neo,  'neoTEST_chemotherapy'] = 4
-    neocolon.loc[neocolon.Chemotherapy in unk_neo,  'neoTEST_chemotherapy'] = 9
-    print(neocolon[['Chemotherapy', 'neo_chemotherapy', 'neoTEST_chemotherapy']])
-    
-    
-
 #Function to sum neoadjuvant scores across cases
 
     #Summing chemotherapy and immunotherapy variables
@@ -251,10 +280,80 @@ First looking at the the unique codes for chemotherapy using the following funct
         neo_tot = np.sum(neoadj_sum_array, axis=1)
         print(neo_tot)
     
-    neo_cat_sum('neo_chemotherapy','neo_immunotherapy')
+    #Adding total as column in neocolon dataframe
+    neo_tot= neo_cat_sum('neo_chemotherapy','neo_immunotherapy')
+    neocolon['neo_tot']=neo_tot
     
-Looking into how to add array of row sums as a column back in the neoadj_sum dataframe
+    neocolon['neo_chemotherapy']=neo_chemotherapy.astype(int)
+    neocolon['neo_immunotherapy']=neo_immunotherapy.astype(int)
+    print(neocolon[['neo_chemotherapy', 'neo_immunotherapy', 'neo_tot']])
+    
+               neo_chemotherapy  neo_immunotherapy  neo_tot
+        0                     0                  0      0.0
+        1                     0                  0      0.0
+        2                     0                  0      0.0
+        3                     0                  0      0.0
+        4                     0                  0      0.0
+        5                     1                  0      1.0
+        6                     0                  0      0.0
+        7                     0                  0      0.0
+        8                     0                  0      0.0
+        9                     0                  0      0.0
+        10                    0                  0      0.0
+        11                    0                  0      0.0
+        12                    1                  2      3.0
+        13                    2                  0      2.0
 
+
+#Function for creating new neoadjuvant variables
+This function translates the original NAACCR codes into the new neoadjuvant coding categories
+
+     #Lists for translating NAACCR codes into neoadjuvant codes
+        no_neo = [0]
+        unl_neo= [3, 82]
+        pos_neo= [88, 1, 2]
+        lik_neo= [85]
+        uni_neo= [86, 87]
+        unk_neo= [99]
+
+
+    def translate_to_neo(og_var):
+        '''This function translates the original NAACCR variable coding into the new
+        neoadjuvant variable codings and returns a list with the new codings'''
+        #Creating empty list for new neoadjuvant variable codes
+        new_neo_var=[]
+        #Creating new variable codes from above lists of neoadjuvant codes
+        for code in og_var:
+            if code in no_neo:
+                new_neo_var.append(0)
+            if code in unl_neo:
+                new_neo_var.append(1)
+            if code in pos_neo:
+                new_neo_var.append(2)
+            if code in lik_neo:
+                new_neo_var.append(3)
+            if code in uni_neo:
+                new_neo_var.append(4)
+            if code in unk_neo:
+                new_neo_var.append(9)
+        return new_neo_var
+
+    chemotherapy_neo=translate_to_neo(neocolon["Chemotherapy"])
+    neocolon['chemotherapy_neo']=chemotherapy_neo
+    print(neocolon[['neo_chemotherapy', 'chemotherapy_neo']])
+    
+           neo_chemotherapy  chemotherapy_neo
+    0                     0                 0
+    1                     0                 0
+    2                     0                 0
+    3                     0                 0
+    4                     0                 0
+    5                     1                 1
+    6                     0                 0
+    7                     0                 0
+    8                     0                 0
+    9                     0                 0
+    
 
     
 #Next steps
